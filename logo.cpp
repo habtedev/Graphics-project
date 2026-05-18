@@ -111,5 +111,83 @@ static void buildPath()
     cubicRel(15.7f,-28.8f,     19.7f,-91.1f,         19.7f,-126.3f);
     lineRel(0.1f,-59.3f);
 }
+static void getBBox(double &x0,double &y0,double &x1,double &y1)
+{
+    x0=y0=1e30; x1=y1=-1e30;
+    for(int i=0;i<(int)g_verts.size();i++){
+        if(g_verts[i][0]<x0) x0=g_verts[i][0];
+        if(g_verts[i][0]>x1) x1=g_verts[i][0];
+        if(g_verts[i][1]<y0) y0=g_verts[i][1];
+        if(g_verts[i][1]>y1) y1=g_verts[i][1];
+    }
+}
 
+
+#ifndef CALLBACK
+  #define CALLBACK
+#endif
+
+static void CALLBACK cb_begin (GLenum t)     { glBegin(t); }
+static void CALLBACK cb_end   ()             { glEnd();    }
+static void CALLBACK cb_vertex(void *d)      { glVertex3dv((GLdouble*)d); }
+static void CALLBACK cb_error (GLenum /*e*/) {}
+
+
+static void display()
+{
+    glClearColor(1,1,1,1);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    double bx0,by0,bx1,by1;
+    getBBox(bx0,by0,bx1,by1);
+
+    double svgW=bx1-bx0, svgH=by1-by0;
+    double margin=40.0;
+    double sx=(WIN_W-2*margin)/svgW;
+    double sy=(WIN_H-2*margin)/svgH;
+    double s = sx<sy ? sx : sy;
+    double ox=margin+(WIN_W-2*margin-svgW*s)/2.0-bx0*s;
+    double oy=margin+(WIN_H-2*margin-svgH*s)/2.0-by0*s;
+
+    // Compute center of the shape in screen space (before rotation)
+    double cx = WIN_W / 2.0;
+    double cy = WIN_H / 2.0;
+
+    int N=(int)g_verts.size();
+    std::vector< std::array<double,3> > tv(N);
+    for(int i=0;i<N;i++){
+        // Transform to screen space
+        double sx_ = g_verts[i][0]*s + ox;
+        double sy_ = WIN_H - (g_verts[i][1]*s + oy);
+
+        // Rotate around screen center
+        double dx = sx_ - cx;
+        double dy = sy_ - cy;
+        double rad = g_angle * 3.14159265358979323846 / 180.0;
+        double cosA = cos(rad);
+        double sinA = sin(rad);
+
+        tv[i][0] = cosA * dx - sinA * dy + cx;
+        tv[i][1] = sinA * dx + cosA * dy + cy;
+        tv[i][2] = 0.0;
+    }
+
+    GLUtesselator *tess = gluNewTess();
+    gluTessCallback(tess,GLU_TESS_BEGIN,  (GLvoid(CALLBACK*)())cb_begin);
+    gluTessCallback(tess,GLU_TESS_END,    (GLvoid(CALLBACK*)())cb_end);
+    gluTessCallback(tess,GLU_TESS_VERTEX, (GLvoid(CALLBACK*)())cb_vertex);
+    gluTessCallback(tess,GLU_TESS_ERROR,  (GLvoid(CALLBACK*)())cb_error);
+    gluTessProperty(tess,GLU_TESS_WINDING_RULE,GLU_TESS_WINDING_NONZERO);
+
+    glColor3f(1,0,0);
+    gluTessBeginPolygon(tess,NULL);
+    gluTessBeginContour(tess);
+    for(int i=0;i<N;i++)
+        gluTessVertex(tess,tv[i].data(),tv[i].data());
+    gluTessEndContour(tess);
+    gluTessEndPolygon(tess);
+    gluDeleteTess(tess);
+
+    glutSwapBuffers();
+}
 
