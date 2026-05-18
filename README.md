@@ -64,11 +64,11 @@ Rendered outputs (click to enlarge):
 
 | Flag Output                                         | Logo Output                                         | Sample 3                                            |
 | --------------------------------------------------- | --------------------------------------------------- | --------------------------------------------------- |
-| ![img1](image/Screenshot%202026-05-18%20092152.png) | ![img2](image/Screenshot%202026-05-18%20092220.png) | ![img3](image/Screenshot%202026-05-18%20092243.png) |
+| ![img5](image/Screenshot%202026-05-18%20092356.png) | ![img2](image/Screenshot%202026-05-18%20092220.png) | ![img3](image/Screenshot%202026-05-18%20092243.png) |
 
 | Sample 4                                            | Sample 5                                            |   |
 | --------------------------------------------------- | --------------------------------------------------- | - |
-| ![img4](image/Screenshot%202026-05-18%20092333.png) | ![img5](image/Screenshot%202026-05-18%20092356.png) |   |
+| ![img4](image/Screenshot%202026-05-18%20092333.png) | ![img1](image/Screenshot%202026-05-18%20092152.png) |   |
 
 ---
 
@@ -112,4 +112,21 @@ If you are learning graphics programming, try modifying:
 * Add animation effects
 
 Small changes = big learning progress.
+
+---
+
+## 🧑‍🎓 Contributors — Computer Science (3rd Year)
+
+The following students contributed to this project (ordered list):
+
+| No. | Name | Student ID |
+| ---: | --- | --- |
+| 1 | Rehima Yusuf | GUR/01216/16 |
+| 2 | Habtamu Amare | GUR/03105/16 |
+| 3 | Abubeker Yimer | GUR/02093/16 |
+| 4 | Tadele Birhanu | GUR/01300/16 |
+| 5 | Mequannt Eshite | GUR/01681/16 |
+| 6 | Amanuel Hailie | GUR/01030/16 |
+| 7 | Maregu Adebabay | GUR/02393/16 |
+
 
