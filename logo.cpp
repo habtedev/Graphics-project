@@ -190,4 +190,64 @@ static void display()
 
     glutSwapBuffers();
 }
+static void reshape(int w,int h)
+{
+    glViewport(0,0,w,h);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(0,w,0,h);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+}
 
+static void keyboard(unsigned char key,int,int)
+{
+    switch(key) {
+        case 27: case 'q': case 'Q':
+            exit(0);
+            break;
+        case 'l': case 'L':
+            // Rotate left (counter-clockwise)
+            g_angle += ROTATE_STEP;
+            glutPostRedisplay();
+            break;
+        case 'r': case 'R':
+            // Rotate right (clockwise)
+            g_angle -= ROTATE_STEP;
+            glutPostRedisplay();
+            break;
+        default:
+            break;
+    }
+}
+
+static void specialKeys(int key, int, int)
+{
+    switch(key) {
+        case GLUT_KEY_LEFT:
+            g_angle += ROTATE_STEP;
+            glutPostRedisplay();
+            break;
+        case GLUT_KEY_RIGHT:
+            g_angle -= ROTATE_STEP;
+            glutPostRedisplay();
+            break;
+        default:
+            break;
+    }
+}
+
+int main(int argc,char **argv)
+{
+    buildPath();
+    glutInit(&argc,argv);
+    glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGB);
+    glutInitWindowSize(WIN_W,WIN_H);
+    glutCreateWindow("Logo - L/R or Arrow Keys to Rotate");
+    glutDisplayFunc(display);
+    glutReshapeFunc(reshape);
+    glutKeyboardFunc(keyboard);
+    glutSpecialFunc(specialKeys);   // register arrow key handler
+    glutMainLoop();
+    return 0;
+}
