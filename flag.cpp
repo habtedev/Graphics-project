@@ -68,3 +68,91 @@ void drawFlag()
         drawStar(sx, sy, starR, starr);
     }
 }
+#define POLE_X       30.0f
+#define POLE_TOP     20.0f
+#define POLE_BOTTOM 395.0f
+#define POLE_W        8.0f
+#define BALL_R        9.0f
+
+#define FLAG_OFFSET_X  34.0f
+#define FLAG_SCALE     0.62f
+
+void drawPole()
+{
+
+    glColor3f(0.55f, 0.55f, 0.58f);
+    glBegin(GL_QUADS);
+        glVertex2f(POLE_X - POLE_W, POLE_TOP);
+        glVertex2f(POLE_X + POLE_W, POLE_TOP);
+        glVertex2f(POLE_X + POLE_W, POLE_BOTTOM);
+        glVertex2f(POLE_X - POLE_W, POLE_BOTTOM);
+    glEnd();
+
+
+    glColor3f(0.80f, 0.80f, 0.83f);
+    glBegin(GL_QUADS);
+        glVertex2f(POLE_X - POLE_W,          POLE_TOP);
+        glVertex2f(POLE_X - POLE_W + 3.0f,   POLE_TOP);
+        glVertex2f(POLE_X - POLE_W + 3.0f,   POLE_BOTTOM);
+        glVertex2f(POLE_X - POLE_W,           POLE_BOTTOM);
+    glEnd();
+
+
+    glColor3f(0.75f, 0.65f, 0.20f);   // gold-ish
+    int   segs  = 32;
+    float pi    = 3.14159265f;
+    glBegin(GL_TRIANGLE_FAN);
+        glVertex2f(POLE_X, POLE_TOP - BALL_R);
+        for (int i = 0; i <= segs; i++) {
+            float a = 2.0f * pi * i / segs;
+            glVertex2f(POLE_X + BALL_R * cosf(a),
+                       (POLE_TOP - BALL_R) + BALL_R * sinf(a));
+        }
+    glEnd();
+
+
+    glColor3f(0.40f, 0.40f, 0.42f);
+    glBegin(GL_QUADS);
+        glVertex2f(POLE_X - 18.0f, POLE_BOTTOM);
+        glVertex2f(POLE_X + 18.0f, POLE_BOTTOM);
+        glVertex2f(POLE_X + 18.0f, POLE_BOTTOM + 10.0f);
+        glVertex2f(POLE_X - 18.0f, POLE_BOTTOM + 10.0f);
+    glEnd();
+}
+
+void display()
+{
+    glClearColor(0.53f, 0.81f, 0.92f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    drawPole();
+
+    glPushMatrix();
+        glTranslatef(FLAG_OFFSET_X, POLE_TOP, 0.0f);
+        glScalef(FLAG_SCALE, FLAG_SCALE, 1.0f);
+        drawFlag();
+    glPopMatrix();
+
+    glutSwapBuffers();
+}
+void reshape(int w, int h)
+{
+    glViewport(0, 0, w, h);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(0, WIN_W, WIN_H, 0);
+}
+int main(int argc, char** argv)
+{
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+    glutInitWindowSize(WIN_W, WIN_H);
+    glutInitWindowPosition(100, 100);
+    glutCreateWindow("Bosnia & Herzegovina - Flag");
+    glutDisplayFunc(display);
+    glutReshapeFunc(reshape);
+    glutMainLoop();
+    return 0;
+}
